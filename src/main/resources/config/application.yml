@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/products?useSSL=false
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 60000

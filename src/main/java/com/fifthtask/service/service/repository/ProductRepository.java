@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,13 +22,13 @@ public class ProductRepository {
     @Autowired
     private DataSource dataSource;
 
-    public Product getProductById(long id) {
+    public Optional<Product> getProductById(long id) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement("select id, model_name,brand_name,country,price from products where id=?")) {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return mapProduct(rs);
+                return Optional.ofNullable(mapProduct(rs));
             } else {
                 return null;
             }
@@ -79,8 +80,8 @@ public class ProductRepository {
             ResultSet rs = stmt.getResultSet();
             //check here
             return 200;
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("Updating product error");
         }
     }
 
@@ -90,12 +91,12 @@ public class ProductRepository {
             stmt.setLong(1, id);
             stmt.executeUpdate();
             return 200;
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("Delete product error");
         }
     }
 
-    public List<Product> searchProduct(String brandName, String category) {// checked
+    public Optional<List<Product>> searchProduct(String brandName, String category) {// checked
         List<Product> productList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              //Calling procedure because statement is rather long
@@ -111,9 +112,9 @@ public class ProductRepository {
             while (rs.next()) {
                 productList.add(mapProduct(rs));
             }
-            return productList;
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            return Optional.ofNullable(productList);
+        } catch (Exception ex) {
+            throw new RuntimeException("SearchProduct error");
         }
     }
 }

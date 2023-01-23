@@ -38,7 +38,7 @@ public class CategoryRepository {
             }
             return result;
         } catch (Exception e){
-            throw new RuntimeException("getAllCategories Error", e);
+            throw new RuntimeException("Getting all categories Error", e);
         }
     }
 

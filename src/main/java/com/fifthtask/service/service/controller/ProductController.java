@@ -17,7 +17,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/getproduct/{id}")
+    @GetMapping("/get/{id}")
     public Product getProduct(@PathVariable long id) {
 
         return productService.getProduct(id);
@@ -29,7 +29,7 @@ public class ProductController {
         return new RestResponse(String.valueOf(id));
     }
 
-    @PutMapping("/updateproduct/{id}")
+    @PutMapping("/update/{id}")
     public RestResponse updateProduct(@PathVariable long id, @RequestBody ProductUpdateDto product) {
         long respCode = productService.updateProduct(id, product);
         return new RestResponse(String.valueOf(respCode));

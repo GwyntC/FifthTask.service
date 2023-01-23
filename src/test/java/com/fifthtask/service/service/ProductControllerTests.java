@@ -65,12 +65,12 @@ public class ProductControllerTests {
 
     @Test
     public void getProductTest() throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/api/products/getproduct/29")
+        MvcResult mvcResult = mvc.perform(get("/api/products/get/29")
                 )
                 .andReturn();
         Product product = parseResponse(mvcResult, Product.class);
         assertThat(product.getId()).isEqualTo(29);
-        assertThat(product.getBrandName()).isEqualTo("Rudenko");
+        assertThat(product.getBrandName()).isEqualTo("HP Pavilion");
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ProductControllerTests {
                       "categoryId":%d
                   }               
                 """.formatted(modelName, brandName, country, price, categoryId);
-        MvcResult mvcResult = mvc.perform(put("/api/products/updateproduct/29")
+        MvcResult mvcResult = mvc.perform(put("/api/products/update/29")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                 )

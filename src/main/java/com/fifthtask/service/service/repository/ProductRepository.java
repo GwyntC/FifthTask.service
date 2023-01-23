@@ -27,11 +27,11 @@ public class ProductRepository {
              PreparedStatement stmt = conn.prepareStatement("select id, model_name,brand_name,country,price from products where id=?")) {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.ofNullable(mapProduct(rs));
-            } else {
-                return null;
-            }
+            //  if (rs.next()) {
+            return Optional.ofNullable(mapProduct(rs));
+            //} else {
+            //  return null;
+            // }
         } catch (Exception e) {
             throw new RuntimeException("getProductById Error", e);
         }
@@ -69,7 +69,7 @@ public class ProductRepository {
     public long updateProduct(long id, ProductUpdateDto dto) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement("update products set model_name=?, brand_name=?, " +
-                                                                 "country=?, price=?,category_id=? where id=?")) {
+                     "country=?, price=?,category_id=? where id=?")) {
             stmt.setString(1, dto.getModelName());
             stmt.setString(2, dto.getBrandName());
             stmt.setString(3, dto.getCountry());

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fifthtask.service.service.dto.RestResponse;
 import com.fifthtask.service.service.model.Product;
 import com.fifthtask.service.service.repository.ProductRepository;
+import org.assertj.core.api.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -64,13 +66,25 @@ public class ProductControllerTests {
     }
 
     @Test
-    public void getProductTest() throws Exception {
+    public void getProductPositiveTest() throws Exception {
         MvcResult mvcResult = mvc.perform(get("/api/products/get/29")
                 )
                 .andReturn();
         Product product = parseResponse(mvcResult, Product.class);
         assertThat(product.getId()).isEqualTo(29);
         assertThat(product.getBrandName()).isEqualTo("HP Pavilion");
+    }
+
+    @Test
+    public void getProductNegativeTest() {
+        Exception ex = Assertions.assertThrows(Exception.class, () -> {
+                    MvcResult mvcResult = mvc.perform(get("/api/products/get/190")
+                            )
+                            .andReturn();
+                    Product product = parseResponse(mvcResult, Product.class);
+                },
+                ("Allowed wrong id"));
+        assertThat(ex.getMessage()).contains("getProductById Error");
     }
 
     @Test
@@ -99,7 +113,35 @@ public class ProductControllerTests {
     }
 
     @Test
-    public void searchProducts() throws Exception {
+    public void updateProductNegative() {
+        String modelName = "HP Pavilion Aero 13-be0027ua (5A5Z1EA) Silver";
+        String brandName = "HP Pavilion";
+        String country = "Estonia";
+        double price = 180.06;
+        int categoryId = 2;
+        String body = """
+                  {
+                      "modelName":"%s",
+                      "brandName":"%s",
+                      "country":"%s",
+                      "price":%.2f,
+                      "categoryId":%d
+                  }               
+                """.formatted(modelName, brandName, country, price, categoryId);
+        Exception ex = Assertions.assertThrows(Exception.class, () -> {
+                    MvcResult mvcResult = mvc.perform(put("/api/products/update/290")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(body)
+                            )
+                            .andReturn();
+                    RestResponse response = parseResponse(mvcResult, RestResponse.class);
+                },
+                ("Allowed wrong id"));
+        assertThat(ex.getMessage()).contains("getProductById Error");
+    }
+
+    @Test
+    public void searchProductsPositive() throws Exception {
         String brandName = "ACER";
         String categoryName = "laptops";
         String body = """
@@ -118,12 +160,45 @@ public class ProductControllerTests {
     }
 
     @Test
+    public void searchProductsNegative() {
+        String brandName = "AC";
+        String categoryName = "laptops";
+        String body = """
+                  {
+                      "brandName":"%s",
+                      "category":"%s"
+                  }               
+                """.formatted(brandName, categoryName);
+        Exception ex = Assertions.assertThrows(Exception.class, () -> {
+                    MvcResult mvcResult = mvc.perform(post("/api/products/_search")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(body)
+                            )
+                            .andReturn();
+                    List<Product> productList = parseResponse(mvcResult, List.class);
+                },
+                ("Allowed empty field;"));
+        assertThat(ex.getMessage()).contains("Wrong brand or category");
+
+    }
+
+    @Test
     public void deleteProduct() throws Exception {
         MvcResult mvcResult = mvc.perform(delete("/api/products/delete/28")
                 )
                 .andReturn();
         RestResponse res = parseResponse(mvcResult, RestResponse.class);
         assertThat(res.getResult()).isEqualTo("200");
+    }
+    @Test
+    public void  deleteProductNegative(){
+        Exception ex=Assertions.assertThrows(Exception.class,()->{
+            MvcResult mvcResult = mvc.perform(delete("/api/products/delete/280")
+                    )
+                    .andReturn();
+            RestResponse res = parseResponse(mvcResult, RestResponse.class);
+        },"Allowed wrong id");
+        assertThat(ex.getMessage()).contains("getProductById Error");
     }
 
     private <T> T parseResponse(MvcResult mvcResult, Class<T> c) {

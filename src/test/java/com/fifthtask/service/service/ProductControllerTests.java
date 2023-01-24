@@ -144,12 +144,16 @@ public class ProductControllerTests {
     public void searchProductsPositive() throws Exception {
         String brandName = "ACER";
         String categoryName = "laptops";
+        int pageStart=1;
+        int pagesCount=10;
         String body = """
                   {
                       "brandName":"%s",
-                      "category":"%s"
+                      "category":"%s",
+                      "pageStart":%d,
+                      "pagesCount":%d
                   }               
-                """.formatted(brandName, categoryName);
+                """.formatted(brandName, categoryName,pageStart-1,pagesCount);
         MvcResult mvcResult = mvc.perform(post("/api/products/_search")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
@@ -163,12 +167,16 @@ public class ProductControllerTests {
     public void searchProductsNegative() {
         String brandName = "AC";
         String categoryName = "laptops";
+        int pageStart=1;
+        int pagesCount=10;
         String body = """
                   {
                       "brandName":"%s",
-                      "category":"%s"
+                      "category":"%s",
+                      "pageStart":%d,
+                      "pagesCount":%d
                   }               
-                """.formatted(brandName, categoryName);
+                """.formatted(brandName, categoryName,pageStart,pagesCount);
         Exception ex = Assertions.assertThrows(Exception.class, () -> {
                     MvcResult mvcResult = mvc.perform(post("/api/products/_search")
                                     .contentType(MediaType.APPLICATION_JSON)

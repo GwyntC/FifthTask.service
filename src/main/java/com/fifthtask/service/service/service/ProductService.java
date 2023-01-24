@@ -15,7 +15,7 @@ public interface ProductService {
 
     int deleteProduct(long id);
 
-    List<Product> search(String brandName, String category);
+    List<Product> search(String brandName, String category,int startPage,int pagesCount);
 
     List<Category> getAllCategories();
 }

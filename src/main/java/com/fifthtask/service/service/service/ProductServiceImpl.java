@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Product> search(String brandName, String category) {
+    public List<Product> search(String brandName, String category,int startPage,int pagesCount) {
         if (brandName == null || category == null) {
             throw new IllegalArgumentException("Brand or category can not be null");
         } else if (brandName.equals("") || category.equals("")) {
@@ -58,7 +58,10 @@ public class ProductServiceImpl implements ProductService {
         } else if (brandName.equals(" ") || category.equals(" ")) {
             throw new RuntimeException("Brand or category can not be spaces");
         }
-        List<Product> productList = searchOrThrow(brandName, category);
+        if(startPage>0){
+            startPage=startPage-1;
+        }
+        List<Product> productList = searchOrThrow(brandName, category,startPage,pagesCount);
         if (productList.size() == 0) {
             throw new RuntimeException("Wrong brand or category");
         }
@@ -76,8 +79,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new NotFoundException("Product with id %d not found".formatted(id)));
     }
 
-    private List<Product> searchOrThrow(String brandName, String category) {
-        return productRepository.searchProduct(brandName, category).orElseThrow(() ->
+    private List<Product> searchOrThrow(String brandName, String category,int startPage,int pagesCount) {
+        return productRepository.searchProduct(brandName, category,startPage,pagesCount).orElseThrow(() ->
                 new NotFoundException("Product with such brand %s and category %s not found".formatted(brandName, category)));
     }
 

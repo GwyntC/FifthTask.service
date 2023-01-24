@@ -37,7 +37,7 @@ public class ProductController {
 
     @PostMapping("/_search")
     public List<Product> searchProduct(@RequestBody ProductSearchDto dto) {//add passing body
-        return productService.search(dto.getBrandName(), dto.getCategory());
+        return productService.search(dto.getBrandName(), dto.getCategory(),dto.getPageStart(),dto.getPagesCount());
     }
 
     @DeleteMapping("delete/{id}")

@@ -8,4 +8,6 @@ import lombok.Data;
 public class ProductSearchDto {
     private String brandName;
     private String category;
+    private int pageStart;
+    private int pagesCount;
 }

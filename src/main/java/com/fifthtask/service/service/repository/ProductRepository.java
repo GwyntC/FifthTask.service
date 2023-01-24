@@ -96,7 +96,7 @@ public class ProductRepository {
         }
     }
 
-    public Optional<List<Product>> searchProduct(String brandName, String category) {// checked
+    public Optional<List<Product>> searchProduct(String brandName, String category,int startPage,int countPages) {// checked
         List<Product> productList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
              //Calling procedure because statement is rather long

@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 public class CategoryControllerTest {
     @Autowired
-    private MockMvc mvc;
+    private MockMvc mvc;// Mock for send to REST Controller
 
     @Autowired
     private CategoryRepository categoryRepository;

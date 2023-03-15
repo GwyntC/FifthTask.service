@@ -3,13 +3,14 @@ package com.fifthtask.service.service.controller;
 import com.fifthtask.service.service.model.Category;
 import com.fifthtask.service.service.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
 @RestController
+@CrossOrigin
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {

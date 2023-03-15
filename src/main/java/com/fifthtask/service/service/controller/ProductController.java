@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
@@ -19,11 +20,15 @@ public class ProductController {
 
     @GetMapping("/get/{id}")
     public Product getProduct(@PathVariable long id) {
-
-        return productService.getProduct(id);
+        Product res=productService.getProduct(id);
+        return res;
+    }
+    @GetMapping("/get")
+    public List<Product> getAll(){
+        return productService.getProducts();
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public RestResponse createProduct(@RequestBody Product product) {
         long id = productService.createProduct(product);
         return new RestResponse(String.valueOf(id));

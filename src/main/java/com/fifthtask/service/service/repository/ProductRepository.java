@@ -24,14 +24,14 @@ public class ProductRepository {
 
     public Optional<Product> getProductById(long id) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("select id, model_name,brand_name,country,price from products where id=?")) {
+             PreparedStatement stmt = conn.prepareStatement("select id, model_name,brand_name,country,price,category_id from products where id=?")) {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
-            //  if (rs.next()) {
+             if (rs.next()) {
             return Optional.ofNullable(mapProduct(rs));
-            //} else {
-            //  return null;
-            // }
+            } else {
+              return null;
+             }
         } catch (Exception e) {
             throw new RuntimeException("getProductById Error", e);
         }
@@ -43,7 +43,9 @@ public class ProductRepository {
                 .brandName(rs.getString("brand_name"))
                 .modelName(rs.getString("model_name"))
                 .country(rs.getString("country"))
-                .price(rs.getBigDecimal("price")).build();
+                .price(rs.getBigDecimal("price"))
+                .categoryId(rs.getLong("category_id"))
+                .build();
     }
 
     public Long createProduct(Product product) {
@@ -105,8 +107,8 @@ public class ProductRepository {
             //and category from table categories
             stmt.setString(1, brandName);
             stmt.setString(2, category);
-            stmt.setLong(3, 0);
-            stmt.setLong(4, 4);
+            stmt.setLong(3, startPage);
+            stmt.setLong(4, countPages);
             stmt.executeQuery();
             ResultSet rs = stmt.getResultSet();
             while (rs.next()) {
@@ -116,5 +118,20 @@ public class ProductRepository {
         } catch (Exception ex) {
             throw new RuntimeException("SearchProduct error");
         }
+    }
+
+    public List<Product> getProducts() {
+        List<Product> productList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement= connection.prepareStatement("SELECT id, model_name,brand_name,country,price,category_id from products where id>30");
+            statement.executeQuery();
+            ResultSet rs = statement.getResultSet();
+            while (rs.next()) {
+                productList.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return productList;
     }
 }

@@ -43,7 +43,7 @@ public class ProductControllerTests {
         String modelName = "HP Pavilion Aero 13-be0027ua (5A5Z1EA) Silver";
         String brandName = "Rudenko";
         String country = "Kazakhstan";
-        double price = 180.09;
+        double price = 180.99;
         int categoryId = 1;
         String body = """
                   {
@@ -91,7 +91,7 @@ public class ProductControllerTests {
     public void updateProductTest() throws Exception {
         String modelName = "HP Pavilion Aero 13-be0027ua (5A5Z1EA) Silver";
         String brandName = "HP Pavilion";
-        String country = "Estonia";
+        String country = "Estona";
         double price = 180.06;
         int categoryId = 2;
         String body = """

@@ -34,6 +34,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getProducts() {
+        return productRepository.getProducts();
+    }
+
+    @Override
     public long updateProduct(long id, ProductUpdateDto dto) {
         idCheck(id);
         Product product = getOrThrow(id);
